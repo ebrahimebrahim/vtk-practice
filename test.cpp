@@ -5,7 +5,7 @@ VTK_MODULE_INIT(vtkRenderingFreeType);
 VTK_MODULE_INIT(vtkInteractionStyle);
 
 #include <vtkSmartPointer.h>
-#include <vtkConeSource.h>
+#include <vtkCylinderSource.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkTextActor.h>
 #include <vtkRenderer.h>
@@ -15,28 +15,34 @@ VTK_MODULE_INIT(vtkInteractionStyle);
 
 int main()
 {
-    auto cone = vtkSmartPointer<vtkConeSource>::New();
-    cone->SetResolution(8);
+    auto cyl = vtkSmartPointer<vtkCylinderSource>::New();
 
     auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapper->SetInputData(cone->GetOutput());
+    mapper->SetInputConnection(cyl->GetOutputPort());
+    // SetInputData? GetOutput?
 
-    auto coneActor = vtkSmartPointer<vtkActor>::New();
-    coneActor->SetMapper(mapper);
+    auto cylActor = vtkSmartPointer<vtkActor>::New();
+    cylActor->SetMapper(mapper);
 
     auto textActor = vtkSmartPointer<vtkTextActor>::New();
     textActor->SetInput("Hello World");
 
     auto renderer = vtkSmartPointer<vtkRenderer>::New();
     renderer->AddActor(textActor);
-    renderer->AddActor(coneActor);
-    renderer->ResetCamera();
+    renderer->AddActor(cylActor);
 
     auto interactor = vtkSmartPointer<vtkRenderWindowInteractor>::New();
     
     auto renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
     renderWindow->AddRenderer(renderer);
+
+    // These two seem to be equivalent? Pick one I guess?
     renderWindow->SetInteractor(interactor);
+    // interactor->SetRenderWindow(renderWindow);
+
+    // Things seem to work without this:
+    // renderWindow->Render();
+    // I wonder why
     
     interactor->Start();
 
