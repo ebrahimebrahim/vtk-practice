@@ -37,6 +37,7 @@ int main()
     textActor->SetInput("Hello World");
 
     auto renderer = vtkSmartPointer<vtkRenderer>::New();
+    renderer->SetBackground(0.7,0.7,0.9);
     renderer->AddActor(textActor);
     renderer->AddActor(coneActor);
 
@@ -47,6 +48,7 @@ int main()
 
     // These two seem to be equivalent? Pick one I guess?
     renderWindow->SetInteractor(interactor);
+    renderWindow->SetSize(1000,1000);
     // interactor->SetRenderWindow(renderWindow);
 
     // Things seem to work without this:
