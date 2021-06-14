@@ -11,6 +11,7 @@ VTK_MODULE_INIT(vtkInteractionStyle);
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkInteractorStyleSwitch.h>
 #include <vtkActor.h>
 
 int main()
@@ -54,6 +55,9 @@ int main()
     // Things seem to work without this:
     // renderWindow->Render();
     // I wonder why
+
+    auto iStyle = vtkInteractorStyleSwitch::SafeDownCast(interactor->GetInteractorStyle());
+    iStyle->SetCurrentStyleToTrackballActor();
     
     interactor->Start();
 
