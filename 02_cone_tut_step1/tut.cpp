@@ -43,18 +43,23 @@ int main() {
     renWin->SetSize(300,300);
     renWin->SetWindowName("tut_step1");
 
-    // I had to comment out the following line.
-    // For some reason, calling GetActiveCamera on the renderer
-    // without following it by "->Azimuth" seems to
-    // reposition the camera. Not understanding why.
-    // vtkCamera * camera = ren->GetActiveCamera();
+    vtkCamera * camera = ren->GetActiveCamera();
+
+    // This took a bit to figure out:
+    // Grabbing the camera with vtkRenderer::GetActiveCamera above
+    // prevents the camera from automatically getting "reset"
+    // And "reset" doesn't mean what it sounds like:
+    // It means move the camera along the view vector
+    // (the vector from camera pos to lookAt, i.e. focus, point)
+    // so that all the actors are visible to the camera.
+    ren->ResetCamera();
 
     for (int i=0; i<360; ++i) {
         renWin->Render();
         // The call to vtkRenderWindow::Render seems to involve
         // waiting for a frame's worth of time.
         // Seems like 60 FPS, like vsync is being used.
-        ren->GetActiveCamera()->Azimuth(2);
+        camera->Azimuth(2);
     }
 
 
