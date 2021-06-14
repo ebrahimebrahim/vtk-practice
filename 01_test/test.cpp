@@ -13,6 +13,7 @@ VTK_MODULE_INIT(vtkInteractionStyle);
 #include <vtkRenderWindowInteractor.h>
 #include <vtkInteractorStyleSwitch.h>
 #include <vtkActor.h>
+#include <stdexcept>
 
 int main()
 {
@@ -57,7 +58,10 @@ int main()
     // I wonder why
 
     auto iStyle = vtkInteractorStyleSwitch::SafeDownCast(interactor->GetInteractorStyle());
-    iStyle->SetCurrentStyleToTrackballActor();
+    if (iStyle)
+        iStyle->SetCurrentStyleToTrackballActor();
+    else
+        throw std::runtime_error("Failed o downcast to a vtkInteractorStyleSwitch!");
     
     interactor->Start();
 
