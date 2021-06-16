@@ -1,0 +1,11 @@
+Things I'd like to demo
+
+make picker event result in a text annotation
+
+make an assembly and set up an interactor to manipulate parts of the assembly by clicking on them
+(will this need a custom interactor? IDK)
+
+try making translucent actors and order them differently in the renderer's list of actors (i.e. add them in different orders)
+the DepthSort example might be related to this
+
+make a textured object
