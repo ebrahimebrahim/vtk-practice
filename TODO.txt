@@ -1,6 +1,7 @@
 Things I'd like to demo
 
 make picker event result in a text annotation
+play with both 2D and 3D text annotation-- see vtk user guide section 4.11
 
 make an assembly and set up an interactor to manipulate parts of the assembly by clicking on them
 (will this need a custom interactor? IDK)
@@ -20,3 +21,7 @@ use python bindings to write a python version of a demo you wrote
 (this is good to know how to do for rapid prototyping!)
 
 look at some exercises from 3.14 in vtk textbook
+
+use a vtkFollower actor to make text (or something else) always face the camera
+(see pdf page 79 of vtk UG)
+
