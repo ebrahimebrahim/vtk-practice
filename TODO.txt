@@ -9,3 +9,14 @@ try making translucent actors and order them differently in the renderer's list 
 the DepthSort example might be related to this
 
 make a textured object
+
+when creating a callback what's the difference between inheriting from
+vtkCommand or inheriting from vtkCallbackCommand?
+
+multiple renderers in one render window
+(see listing 3.4 in vtk textbook for help)
+
+use python bindings to write a python version of a demo you wrote
+(this is good to know how to do for rapid prototyping!)
+
+look at some exercises from 3.14 in vtk textbook
