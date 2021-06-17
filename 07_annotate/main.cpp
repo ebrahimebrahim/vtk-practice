@@ -13,20 +13,50 @@
 #include <vtkInteractorStyleSwitch.h>
 #include <vtkPropPicker.h>
 #include <vtkColorTransferFunction.h>
+#include <vtkTextActor.h>
+#include <vtkTextProperty.h>
+#include <sstream>
+#include <string>
 
 
 // anonymous namespace prevents pollution of global namespace in other TUs
 namespace {
 class PickAnnotater : public vtkCommand {
+
+
 public:
+  
   static PickAnnotater * New() {return new PickAnnotater;}
+
+  vtkSmartPointer<vtkTextActor> txt;
+  std::string txtString;
+
+  PickAnnotater() {
+    txt = vtkTextActor::New();
+    txt->SetInput("peup");
+    vtkTextProperty * txtProperty = txt->GetTextProperty();
+    txtProperty->SetFontFamilyToCourier();
+    txtProperty->SetFontSize(12);
+    txtProperty->ShadowOn();
+    txt->SetDisplayPosition(300,300);
+    txt->VisibilityOff();
+  }
+
+  void SetColor(double * colorData) {
+    txt->GetTextProperty()->SetColor(colorData);
+  }
 
   virtual void Execute(vtkObject * caller, unsigned long, void*) override {
     vtkPropPicker * picker = vtkPropPicker::SafeDownCast(caller);
     if (picker) {
       double pickPos[3];
       picker->GetPickPosition(pickPos);
-      std::cout << "pick! location: " << pickPos[0] << ", " << pickPos[1] << ", " << pickPos[2] << std::endl;
+      std::ostringstream oss;
+      oss << "(" << pickPos[0] << ", " << pickPos[1] << ", " << pickPos[2] << ")";
+      txtString = oss.str();
+      txt->SetInput(txtString.c_str());
+      txt->SetDisplayPosition(250,300);
+      txt->VisibilityOn();
     }
   }
 
@@ -56,8 +86,12 @@ int main() {
     
     vtkProperty * thingProperty = thingActor->GetProperty();
 
+    vtkNew<PickAnnotater> pickAnnotater;
+    pickAnnotater->SetColor(colors->GetColor3d("CornSilk").GetData());
+
     vtkNew<vtkRenderer> ren;
     ren->AddActor(thingActor);
+    ren->AddActor(pickAnnotater->txt);
     ren->SetBackground(colors->GetColor3d("MidnightBlue").GetData());
 
     vtkNew<vtkRenderWindow> renWin;
@@ -74,18 +108,15 @@ int main() {
         iStyle->SetCurrentStyleToTrackballCamera();
     else
         throw std::runtime_error("Failed o downcast to a vtkInteractorStyleSwitch!");
-    
 
     // Press 'p' to trigger interactor->GetPicker()->Pick(...) at the mouse location
-    vtkNew<PickAnnotater> pickAnnotater;
     interactor->GetPicker()->AddObserver(vtkCommand::EndPickEvent, pickAnnotater);
+    // Hmm I just noticed that if you don't move the camera at all after the interactor starts
+    // and you press 'p' for a pick, there's no pick and there's a WARN in stdout:
+    // WARN| vtkInteractorStyleTrackballCamera (0x559a043af800): no current renderer on the interactor style.
+    // I wonder why this is. It seems you need to interact with the interactor for picking to work.
 
-    // Note that you can set the picker to be whatever subclass of vtkAbstractPicker you want
-    // However it seems that you would then have to customize the interactor style completely
-    // by subclassing, say, vtkInteractorStyleTrackballCamera, or a more base class.
-    // In your custom interactor syle you would have to put in the call to the picker's Pick method.
-    // IDK why, but when I tried setting the interactor picker to some other picker
-    // without writing a custom interactor style, the Pick method was no longer triggered when I pressed 'p'
+    
 
 
 

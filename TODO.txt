@@ -2,6 +2,7 @@ Things I'd like to demo
 
 make picker event result in a text annotation
 play with both 2D and 3D text annotation-- see vtk user guide section 4.11
+[The 2D one is now done, but it would be nice to try 3D also]
 
 make an assembly and set up an interactor to manipulate parts of the assembly by clicking on them
 (will this need a custom interactor? IDK)
