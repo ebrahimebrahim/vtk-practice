@@ -26,3 +26,4 @@ look at some exercises from 3.14 in vtk textbook
 use a vtkFollower actor to make text (or something else) always face the camera
 (see pdf page 79 of vtk UG)
 
+make a 3D widget from the list on vtk UG pdf page 86, 87, 88
