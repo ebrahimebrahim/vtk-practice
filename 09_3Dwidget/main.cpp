@@ -12,6 +12,29 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
 #include <vtkTransform.h>
+#include <iostream>
+
+
+namespace{
+
+class BoxWidgetCommand : public vtkCommand {
+public:
+
+    static BoxWidgetCommand * New() {return new BoxWidgetCommand;}
+
+    void Execute(vtkObject* caller, unsigned long, void*) {
+        vtkNew<vtkTransform> t;
+        auto boxWidget = vtkBoxWidget::SafeDownCast(caller);
+        if (!boxWidget) return;
+        boxWidget->GetTransform(t);
+        boxWidget->GetProp3D()->SetUserTransform(t);
+    }
+
+};
+
+} // anon namespace
+
+
 
 int main() {
 
@@ -54,6 +77,9 @@ int main() {
     boxWidget->SetProp3D(coneActor); // here the cone will be inpit to the widget
     boxWidget->PlaceWidget(); // note that we don't add it as an actor to r
     // (instead, it presumably gets in via coneActor and maybe also via i)
+
+    vtkNew<BoxWidgetCommand> boxWidgetCommand;
+    boxWidget->AddObserver(vtkCommand::InteractionEvent,boxWidgetCommand);
     
 
     boxWidget->On();
