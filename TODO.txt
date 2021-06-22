@@ -27,3 +27,5 @@ use a vtkFollower actor to make text (or something else) always face the camera
 (see pdf page 79 of vtk UG)
 
 make a 3D widget from the list on vtk UG pdf page 86, 87, 88
+
+plot a quadric in 3 different ways, kind of like in fig 4.1(a) on p86 of VTK texbook

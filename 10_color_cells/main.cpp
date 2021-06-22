@@ -48,7 +48,7 @@ int main() {
     vtkNew<vtkConeSource> cone;
     cone->SetHeight(3.0);
     cone->SetRadius(1.0);
-    cone->SetResolution(10);
+    cone->SetResolution(50);
 
     vtkNew<vtkPolyDataMapper> coneMapper;
     coneMapper->SetInputConnection(cone->GetOutputPort());
@@ -58,9 +58,10 @@ int main() {
     auto numCells = coneData->GetNumberOfCells();
     vtkNew<vtkFloatArray> coneCellScalars;
     coneCellScalars->SetNumberOfTuples(numCells); // allocates memoery in the vtkFloatArray
+    float stepSize = 2.0 / numCells;
     for (int i=0; i<numCells; ++i) {
         // Using SetTuple instead of InsertTuple means I've already allocated the memory-- it would segfault if i hadn't
-        coneCellScalars->SetTuple1(i,0.0 + 0.1*i); 
+        coneCellScalars->SetTuple1(i,0.0 + stepSize*i); 
     }
 
     vtkCellData * coneCellData  = coneData->GetCellData(); // coneCellData is one of the vtkDataSetAttributes of the vtkDataSet coneData
@@ -68,7 +69,18 @@ int main() {
     coneCellData->SetScalars(coneCellScalars);
 
     // Next I'd like to make a color lookup table to more finely control the color choices of the cells. I don't even know why they are colored right now.
+    vtkNew<vtkLookupTable> lut;
+    lut->SetNumberOfTableValues(numCells);
+    lut->SetTableRange(0.0,2.0);
+    lut->SetHueRange(0.0,0.3);
+    lut->SetValueRange(0.7,0.4);
+    lut->SetSaturationRange(0.5,0.5);
+    lut->Build();
+    lut->SetTableValue(0,colors->GetColor4d("orchid_dark").GetData()); // choosing the color of the cell for the base of the cone
+    coneMapper->SetLookupTable(lut);
+    coneMapper->SetScalarRange(0.0,2.0);
 
+    std::cout << numCells << " " << coneCellScalars->GetTuple1(numCells-1) <<std::endl;
 
 
 
