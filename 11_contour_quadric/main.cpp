@@ -62,6 +62,10 @@ int main() {
     vtkNew<vtkContourFilter> contour;
     contour->SetInputConnection(sample->GetOutputPort());
     contour->GenerateValues(5,0,1.2);
+    // The algorithm is in the function ContourImage, defined in
+    // Filters/Core/vtkSyncronizedTemplates3D.cxx
+    // It looks like for each contour value it goes from zMin to zMax and does something to create points and cells of a vtkPolyData
+    // It's not commented in a friendly way to be understandable without reverse engineering it
 
     vtkNew<vtkPolyDataMapper> contourMapper;
     contourMapper->SetInputConnection(contour->GetOutputPort());
@@ -120,3 +124,4 @@ int main() {
 
     return 0;
 }
+
