@@ -17,23 +17,12 @@ find_package(VTK COMPONENTS
   QUIET
 )
 
-if (NOT VTK_FOUND)
-  message("Skipping SmoothPolyDataFilter: ${VTK_NOT_FOUND_MESSAGE}")
-  return ()
-endif()
 message (STATUS "VTK_VERSION: ${VTK_VERSION}")
-if (VTK_VERSION VERSION_LESS "8.90.0")
-  # old system
-  include(${VTK_USE_FILE})
-  add_executable(SmoothPolyDataFilter MACOSX_BUNDLE SmoothPolyDataFilter.cxx )
-  target_link_libraries(SmoothPolyDataFilter PRIVATE ${VTK_LIBRARIES})
-else ()
-  # include all components
-  add_executable(SmoothPolyDataFilter MACOSX_BUNDLE SmoothPolyDataFilter.cxx )
-  target_link_libraries(SmoothPolyDataFilter PRIVATE ${VTK_LIBRARIES})
-  # vtk_module_autoinit is needed
-  vtk_module_autoinit(
-    TARGETS SmoothPolyDataFilter
-    MODULES ${VTK_LIBRARIES}
-    )
-endif ()
+
+add_executable(SmoothPolyDataFilter SmoothPolyDataFilter.cxx)
+target_link_libraries(SmoothPolyDataFilter PRIVATE ${VTK_LIBRARIES})
+
+vtk_module_autoinit(
+  TARGETS SmoothPolyDataFilter
+  MODULES ${VTK_LIBRARIES}
+)
